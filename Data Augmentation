@@ -1,0 +1,37 @@
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+# Define the ImageDataGenerator for data augmentation
+datagen = ImageDataGenerator(
+    rotation_range=20,         # Random rotation between 0 and 20 degrees
+    width_shift_range=0.2,     # Randomly shift the image horizontally by 20%
+    height_shift_range=0.2,    # Randomly shift the image vertically by 20%
+    shear_range=0.2,           # Shear the image by a factor of 0.2
+    zoom_range=0.2,            # Randomly zoom the image by 20%
+    horizontal_flip=True,      # Randomly flip the image horizontally
+    fill_mode='nearest'        # Fill in missing pixels after transformations
+)
+
+# Example of applying augmentation to one image
+image_idx = random.randint(0, len(balanced_images) - 1)
+image = balanced_images[image_idx].reshape((1, *target_size, 1))  # Reshaping for a single image (add channel dimension)
+
+# Generate augmented images
+augmented_images = datagen.flow(image, batch_size=1)
+
+# Display the original image and a few augmented versions
+plt.figure(figsize=(15, 5))
+plt.subplot(1, 6, 1)
+plt.imshow(image[0].reshape(target_size), cmap='gray')
+plt.title('Original Image')
+plt.axis('off')
+
+# Display 5 augmented images using next() method
+for i in range(5):
+    augmented_image = next(augmented_images)  # Correct way to fetch the next augmented image
+    plt.subplot(1, 6, i+2)
+    plt.imshow(augmented_image[0].reshape(target_size), cmap='gray')
+    plt.title(f'Augmented {i+1}')
+    plt.axis('off')
+
+plt.tight_layout()
+plt.show()
